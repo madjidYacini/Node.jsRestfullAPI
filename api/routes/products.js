@@ -1,6 +1,8 @@
 const express = require ("express")
 const router = express.Router()
+const mongoose = require("mongoose")
 
+const Product = require("../models/product")
 // GET METHOD OF A PRODUCTS
 router.get('/', function(req , res ,next) {
      res.status(200).json({
@@ -11,24 +13,39 @@ router.get('/', function(req , res ,next) {
 // POST METHOD OF PRODUCTS
 
 router.post('/',function (req , res ,next)  {
+   
+    const product = new Product({
+        _id : new mongoose.Types.ObjectId(),
+        name : req.body.name,
+        price : req.body.price
+    })
+    product
+    .save()
+    .then(result =>{
+        console.log(result)
+    })
+    .catch(err =>{
+        console.log(err)
+    })
     res.status(201).json({
-        message :'handling a POST request to /products'
+        message :'handling a POST request to /products',
+        createdProduct : product
     })
 })
 // GET METHOD OF ONE PRODUCT
 
 router.get('/:productId',function(req,res,next){
     const id = req.params.productId
-    if (id === "special"){
-        res.status(200).json({
-            message : " you discovred a special product",
-            id: id  
-        });
-    }else{
-        res.status(200).json({
-            message : "you passed an id "
-        })
-    }
+   Product.findById(id)
+   .exec()
+   .then(doc =>{
+       console.log("form database",doc)
+       res.status(200).json({doc })
+   })
+   .catch(err =>{
+       console.log (err)
+       res.status(500).json({error :err})
+   })
 })
 
 
