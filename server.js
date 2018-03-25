@@ -7,8 +7,9 @@ const server = http.createServer(app)
 server.listen(port)
 server.on('listening', onListening);
 
-
+// test
 function onListening() {
+  console.log("test")
    console.log("the server is listening on the port "+port)
   }
   
