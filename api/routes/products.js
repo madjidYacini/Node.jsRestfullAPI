@@ -6,6 +6,7 @@ const Product = require("../models/product")
 // GET METHOD OF A PRODUCTS
 router.get('/', function(req , res ,next) {
      Product.find()
+<<<<<<< HEAD
      .select(" name price _id ")
      .exec()
      .then(docs =>{
@@ -27,6 +28,15 @@ router.get('/', function(req , res ,next) {
         if(docs.length >0){
          res.status(200).json({
              document : response
+=======
+     .exec()
+     .then(docs =>{
+        console.log("from database"+ docs)
+        console.log(docs.length)
+        if(docs.length >0){
+         res.status(200).json({
+             document : docs
+>>>>>>> 898a7d49657ca0c19530452a5aec7a490249d399
          })
         }else{
             res.status(200).json({
@@ -73,7 +83,11 @@ router.get('/:productId',function(req,res,next){
    .exec()
    .then(doc =>{
        if (doc){
+<<<<<<< HEAD
       
+=======
+       console.log("form database",doc)
+>>>>>>> 898a7d49657ca0c19530452a5aec7a490249d399
        res.status(200).json({doc })
        }else{
            res.status(404).json({message: "no valid entry found for provided ID"})
