@@ -52,10 +52,14 @@ router.post('/',function (req , res ,next)  {
     })
     product
     .save()
-    .then(result =>{
+    .then(result =>{ 
         console.log(result)
         res.status(201).json({
-            createdProduct : result
+            createdProduct : {
+                name :result.name,
+                price : result.price,
+                _id : result._id
+            }
         })
     })
     .catch(err =>{
@@ -70,11 +74,11 @@ router.post('/',function (req , res ,next)  {
 router.get('/:productId',function(req,res,next){
     const id = req.params.productId
    Product.findById(id)
+   .select("name price id")
    .exec()
    .then(doc =>{
        if (doc){
       
-       console.log("form database",doc)
        res.status(200).json({doc })
        }else{
            res.status(404).json({message: "no valid entry found for provided ID"})
