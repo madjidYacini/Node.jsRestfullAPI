@@ -16,14 +16,14 @@ router.get('/', function(req , res ,next) {
                     name : doc.name,
                     price : doc.price,
                     _id : doc. _id,
-                    request :{
+                    GetRequest :{
                         type :"GET",
+                        message: "if you want  to get all the details of this product, click the url below",
                         url :"http://localhost:3000/products/"+doc. _id
                     }
                 }
             }) 
-        }
-        
+        }      
         if(docs.length >0){
          res.status(200).json({
              document : response
@@ -41,7 +41,6 @@ router.get('/', function(req , res ,next) {
         console.log(err)
     })
 }); 
-
 // POST METHOD OF PRODUCTS
 
 router.post('/',function (req , res ,next)  {
@@ -55,10 +54,16 @@ router.post('/',function (req , res ,next)  {
     .then(result =>{ 
         console.log(result)
         res.status(201).json({
+            message :"the product is added ",
             createdProduct : {
                 name :result.name,
                 price : result.price,
                 _id : result._id
+            },
+            requestOfA :{
+                type :"GET",
+                desc :"click the url to see all the products",
+                url :"http://localhost:3000/products"
             }
         })
     })
@@ -77,9 +82,14 @@ router.get('/:productId',function(req,res,next){
    .select("name price id")
    .exec()
    .then(doc =>{
-       if (doc){
-      
-       res.status(200).json({doc })
+       if (doc){  
+       res.status(200).json({
+            product :doc,
+            request :{
+                type : "GET",
+                desc :"get all products", 
+                url :"http://localhost:3000/products" 
+            }})
        }else{
            res.status(404).json({message: "no valid entry found for provided ID"})
        }
@@ -101,14 +111,17 @@ router.patch('/:productId',function(req,res,next){
     updateOps[ops.propName]=ops.value
   }
   Product.update({ _id : id},{$set : updateOps})
-//   console.log(updateOps)
   .exec()
   .then(result =>{
       console.log(result)
       console.log(result )
       res.status(200).json({
-          message : "the object is modified",
-          product : result
+          message :"prodcut updated",
+         request : {
+            type :"GET",
+            desc :"view the product",
+            url : "http://localhost:3000/products/"+id
+        }
       })
   } )
   .catch(err =>{
@@ -128,7 +141,11 @@ router.delete('/:productId',function(req,res,next){
     .exec()
     .then(result =>{ 
         res.status(200).json ({
-            product : result,      
+            message :"product removed ",
+            request :{
+                type :"GET",
+                url : "http://localhost:3000/products/"
+            }     
         })
     })
     .catch(err =>{
@@ -137,5 +154,4 @@ router.delete('/:productId',function(req,res,next){
         })
     })
  })
-
 module.exports = router 
