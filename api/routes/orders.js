@@ -7,18 +7,20 @@ const Product = require ("../models/product")
 router.get ('/', function(req ,res , next){
     Order.find()
     .select("_id product quantity")
+    .populate("product"," name price")
     .exec()
+    
     .then(orders =>{
         const response = {
             count : orders.length,
             products : orders.map(order =>{
                 return {
-                
+                    _id : order._id,
                     quantity : order.quantity,
-                    _id : order._id, 
+                    product : order.product,
+                    
                     Request :{
                         type :"GET",
-                        message: "if you want  to get all the details of this product, click the url below",
                         url :"http://localhost:3000/orders/"+order._id
                     }
                 }
@@ -95,6 +97,8 @@ router.post ('/', function(req ,res , next){
 router.get ('/:orderID', function(req ,res , next){
     const id = req.params.orderID
     Order.findById(id)
+    .populate("product"," name price")
+    
     .exec()
     .then(order =>{
         console.log(order)
